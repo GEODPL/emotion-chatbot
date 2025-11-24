@@ -1,12 +1,15 @@
 import streamlit as st
 from PIL import Image
 import os
-from data_logger import log_user_data   
+from data_logger import log_user_data  
 
-st.set_page_config(page_title="Freud Chat", page_icon="🧠", layout="centered")
+st.set_page_config(page_title="Project Wellness", page_icon="🧠", layout="centered")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+if "exercise_followup" not in st.session_state:
+    st.session_state.exercise_followup = False
 
 def load_avatar(name):
     path = os.path.join("app", "static", "avatars", f"{name}.png")
@@ -17,38 +20,127 @@ avatar_bot = load_avatar("bot")
 
 st.markdown("""
     <style>
-        body {
-            background-color: #fff7f0;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        html, body, [class*="css"]  {
+            font-family: 'Inter', sans-serif;
         }
+
+        body {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .main-container {
+            background: rgba(255,255,255,0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 24px 26px;
+            border-radius: 24px;
+            max-width: 780px;
+            margin: 20px auto 40px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
         .message-container {
             display: flex;
             margin-bottom: 1rem;
+            animation: fadeInUp 0.35s ease forwards;
         }
+
+        .message-container.user {
+            justify-content: flex-start;
+        }
+
+        .message-container.bot,
+        .message-container.exercise {
+            justify-content: flex-start;
+        }
+
         .avatar {
             width: 48px;
             height: 48px;
             border-radius: 50%;
             margin-right: 1rem;
+            box-shadow: 0 0 10px rgba(255, 140, 80, 0.45);
         }
+
         .bubble {
-            background-color: #fffdfd;
-            padding: 1rem;
-            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.70);
+            padding: 1rem 1.1rem;
+            border-radius: 18px;
             max-width: 70%;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             color: #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            transition: transform 0.15s ease;
         }
-        .user .bubble {
-            background-color: #ffe0b2;
+
+        .message-container.user .bubble {
+            background: rgba(255, 224, 178, 0.9);
         }
-        .bot .bubble {
-            background-color: #ffccbc;
+
+        .message-container.bot .bubble {
+            background: rgba(255, 204, 188, 0.9);
+        }
+
+        .bubble:hover {
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        .exercise-card {
+            background: linear-gradient(135deg, #ffe9d6, #ffd4c0);
+            padding: 16px 18px;
+            border-radius: 18px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.8);
+            max-width: 72%;
+        }
+
+        .exercise-title {
+            margin: 0;
+            font-weight: 600;
+            color: #6b3b23;
+            font-size: 1.05rem;
+        }
+
+        .exercise-text {
+            margin-top: 8px;
+            font-size: 1.0rem;
+            color: #5a4640;
+        }
+
+        @keyframes fadeInUp {
+            from {opacity: 0; transform: translateY(10px);}
+            to {opacity: 1; transform: translateY(0);}
         }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center;'>🧡 Freud Chat</h1>", unsafe_allow_html=True)
+st.markdown("""
+    <h1 style="
+        text-align: center;
+        font-size: 2.6rem;
+        font-weight: 600;
+        margin-top: 10px;
+        margin-bottom: 4px;
+        background: linear-gradient(90deg,#ff7f50,#ff9966);
+        -webkit-background-clip: text;
+        color: transparent;
+    ">
+        🧡 Freud Chat – Wellness Edition
+    </h1>
+    <p style="
+        text-align:center;
+        font-size: 0.98rem;
+        color:#5b4639;
+        margin-bottom:18px;
+    ">
+        Μικρές κουβέντες, μικρά βήματα φροντίδας, μεγάλος σεβασμός σε ό,τι νιώθεις.
+    </p>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
 def personal_reply(mood, sleep, water):
     reply = ""
@@ -61,13 +153,17 @@ def personal_reply(mood, sleep, water):
         reply += "Βλέπω ότι είσαι καλά σήμερα. Πολύ καλά νέα αυτά. "
 
     if sleep == "0–2":
-        reply += "Ξέρεις... Το να κοιμάσαι λίγο, μπορεί να σε επηρεάσει σοβαρά μέσα στην ημέρα. "
+        reply += "Ξέρεις... Το να κοιμάσαι λίγο μπορεί να σε επηρεάσει σοβαρά μέσα στην ημέρα. "
     elif sleep == "3–5":
         reply += "Κάποιος δεν ξεκουράστηκε χθες αρκετά. Γιατί; Σου συμβαίνει κάτι; "
     elif sleep == "6–8":
         reply += "Μπράβο για την ποιότητα ύπνου που προσπαθείς να φτιάξεις. "
     else:
-        reply += "Τα έχεις πάει εξαιρετικά με τον ύπνο σου. Οι προσπάθειές μας απέφεραν καρπούς και χαίρομαι πολύ για εσένα, διότι τώρα θα ηρεμήσεις. "
+        reply += (
+            "Τα έχεις πάει εξαιρετικά με τον ύπνο σου. "
+            "Οι προσπάθειές μας απέφεραν καρπούς και χαίρομαι πολύ για εσένα, "
+            "διότι τώρα θα ηρεμήσεις. "
+        )
 
     if water == "0":
         reply += "Η έλλειψη νερού βλέπω ότι σε κάνει να νιώθεις κουρασμένος/η. "
@@ -88,17 +184,17 @@ def therapeutic_reply(mood, sleep, water, user_text):
     if mood < 30:
         reply_parts.append(
             "Ακούγεται πως αυτή τη στιγμή κουβαλάς αρκετή συναισθηματική πίεση. "
-            "Δεν είναι εύκολο να νιώθεις έτσι και είναι σημαντικό που το αναγνωρίζεις και το μοιράζεσαι μαζί μου, ώστε να βρούμε μαζί τη λύση στο θέμα σου."
+            "Δεν είναι εύκολο να νιώθεις έτσι και είναι σημαντικό που το αναγνωρίζεις και το μοιράζεσαι μαζί μου."
         )
     elif mood < 70:
         reply_parts.append(
-            "Νιώθω πως η μέρα σου είχε πάνω-κάτω, και αυτό είναι ψυχικά κουραστικό. "
+            "Νιώθω πως η μέρα σου είχε πάνω-κάτω, και αυτό μπορεί να είναι ψυχικά κουραστικό. "
             "Ας προσπαθήσουμε μαζί να δούμε τι σε επηρέασε περισσότερο."
         )
     else:
         reply_parts.append(
             "Χαίρομαι που αυτή τη στιγμή νιώθεις σχετικά καλά. "
-            "Ας δούμε τι είναι αυτό που σε βοηθάει και τι θα ήθελες να κρατήσεις στη ζωή σου. Δεν πρέπει να κάνουμε εκπτώσεις στην ευτυχία μας."
+            "Ας δούμε τι είναι αυτό που σε βοηθάει και θα ήθελες να κρατήσεις στη ζωή σου."
         )
 
     if "άγχ" in text or "αγχος" in text:
@@ -107,7 +203,7 @@ def therapeutic_reply(mood, sleep, water, user_text):
             "Αν θέλεις, μπορούμε να δούμε μαζί ποια είναι η μεγαλύτερη πηγή άγχους για εσένα αυτή την περίοδο."
         )
 
-    if "πίεση" in text or "πιεζ" in text:
+    if "πίεσ" in text or "πιεζ" in text:
         reply_parts.append(
             "Η αίσθηση πίεσης συνήθως σχετίζεται με προσδοκίες – είτε δικές σου είτε των άλλων. "
             "Θα ήθελα, αν μπορείς, να μου πεις από πού νιώθεις να προέρχεται κυρίως αυτή η πίεση."
@@ -142,7 +238,7 @@ def therapeutic_reply(mood, sleep, water, user_text):
             "Ο ύπνος σου φαίνεται σχετικά ισορροπημένος, κάτι που είναι πολύ σημαντικό για τη διάθεσή σου. "
             "Αυτό είναι μια καλή βάση για να δουλέψουμε πάνω στα υπόλοιπα."
         )
-    else:  
+    else: 
         reply_parts.append(
             "Ο πολύς ύπνος κάποιες φορές είναι ανακουφιστικός, αλλά μπορεί και να κρύβει μια ανάγκη να απομακρυνθείς από ό,τι σε βαραίνει. "
             "Δεν το κρίνουμε, απλώς το παρατηρούμε μαζί."
@@ -175,6 +271,59 @@ def therapeutic_reply(mood, sleep, water, user_text):
     )
 
     return " ".join(reply_parts)
+
+
+def exercise_suggestion(mood, sleep, water, user_text):
+    text = user_text.lower()
+
+    if "άγχ" in text or "αγχος" in text or "φοβ" in text or "πανικ" in text or "κρίση" in text:
+        return (
+            "🧘 Άσκηση αναπνοής 4–2–6 (30''):\n"
+            "Εισπνοή από τη μύτη για 4 δευτερόλεπτα, κράτημα για 2, "
+            "αργή εκπνοή από το στόμα για 6. "
+            "Επανάλαβέ το 5 φορές και παρατήρησε αν κάτι αλλάζει στο σώμα σου."
+        )
+
+    if "πίεσ" in text or "πιεζ" in text or "κουράσ" in text or "κουρασ" in text or "πολλά" in text:
+        return (
+            "📌 Μικρή άσκηση αποφόρτισης:\n"
+            "Γράψε μία πρόταση που αρχίζει με: «Αυτό που με βαραίνει περισσότερο είναι…» "
+            "χωρίς να τη φιλτράρεις. Το πρώτο πράγμα που θα σου βγει είναι και το πιο σημαντικό."
+        )
+
+    if "θλίψ" in text or "στεναχ" in text or "λύπη" in text or "λυπη" in text or "μόνος" in text or "μονος" in text:
+        return (
+            "🤍 Άσκηση ηρεμίας 20'':\n"
+            "Βάλε το χέρι στο στήθος σου, πάρε μία αργή ανάσα και πες από μέσα σου: "
+            "«Είναι εντάξει να νιώθω έτσι. Δεν είμαι μόνος/η σε αυτό που ζω.»"
+        )
+
+    if water == "0":
+        return (
+            "💧 Άσκηση φροντίδας:\n"
+            "Αν μπορείς αυτή τη στιγμή, πιες ένα ποτήρι νερό πριν συνεχίσουμε. "
+            "Είναι ένας μικρός, αλλά σημαντικός τρόπος να δείξεις φροντίδα στον εαυτό σου."
+        )
+
+    if sleep in ["0–2", "3–5"]:
+        return (
+            "😴 Μικρή άσκηση χαλάρωσης:\n"
+            "Για 10 δευτερόλεπτα, χαλάρωσε συνειδητά τους ώμους σου και τη γνάθο σου. "
+            "Πάρε μία βαθιά ανάσα και άφησέ την σιγά-σιγά. "
+            "Αυτή η μικρή κίνηση μπορεί να αποφορτίσει λίγο την ένταση."
+        )
+
+    if mood > 70:
+        return (
+            "🌿 Mini journaling:\n"
+            "Γράψε ένα πράγμα που πήγε καλά σήμερα, όσο μικρό κι αν είναι. "
+            "Όταν το κάνουμε αυτό συχνά, ο εγκέφαλος αρχίζει να εκπαιδεύεται να το παρατηρεί πιο εύκολα."
+        )
+
+    return (
+        "📘 Μικρή άσκηση αναγνώρισης συναισθήματος:\n"
+        "Αν έπρεπε να διαλέξεις μία λέξη για το πώς νιώθεις αυτή τη στιγμή, ποια θα ήταν;"
+    )
 
 
 with st.form("mood_form"):
@@ -218,21 +367,45 @@ with st.form("mood_form"):
     user_input = st.text_area(
         "Γράψε ελεύθερα...",
         label_visibility="collapsed",
-        height=100
+        height=110
     )
 
     submitted = st.form_submit_button("Αποστολή")
 
+
 if submitted and user_input.strip():
-    st.session_state.messages.append(("user", user_input.strip()))
+    text = user_input.strip()
 
-    summary = personal_reply(mood, sleep, water)
-    st.session_state.messages.append(("bot", summary))
+    if st.session_state.exercise_followup:
+        st.session_state.messages.append(("user", text))
 
-    therapy_text = therapeutic_reply(mood, sleep, water, user_input.strip())
-    st.session_state.messages.append(("bot", therapy_text))
+        new_exercise = exercise_suggestion(0, "6–8", "4–6", text)
 
-    log_user_data(mood, sleep, water, user_input.strip())
+        st.session_state.messages.append(("exercise", new_exercise))
+
+        st.session_state.exercise_followup = False
+
+        log_user_data(0, "followup", "followup", text)
+
+    else:
+        st.session_state.messages.append(("user", text))
+
+        summary = personal_reply(mood, sleep, water)
+        st.session_state.messages.append(("bot", summary))
+
+        therapy_text = therapeutic_reply(mood, sleep, water, text)
+        st.session_state.messages.append(("bot", therapy_text))
+
+        exercise_text = exercise_suggestion(mood, sleep, water, text)
+        st.session_state.messages.append(("exercise", exercise_text))
+
+        if exercise_text.startswith("📘 Μικρή άσκηση αναγνώρισης συναισθήματος"):
+            st.session_state.exercise_followup = True
+
+        log_user_data(mood, sleep, water, text)
+
+
+st.markdown("---")
 
 for sender, msg in st.session_state.messages:
     if sender == "user":
@@ -242,10 +415,24 @@ for sender, msg in st.session_state.messages:
                 <div class="bubble">{msg}</div>
             </div>
         """, unsafe_allow_html=True)
-    else:
+
+    elif sender == "bot":
         st.markdown(f"""
             <div class="message-container bot">
                 <img src="app/static/avatars/bot.png" class="avatar">
                 <div class="bubble">{msg}</div>
             </div>
         """, unsafe_allow_html=True)
+
+    elif sender == "exercise":
+        st.markdown(f"""
+            <div class="message-container exercise">
+                <img src="app/static/avatars/bot.png" class="avatar">
+                <div class="exercise-card">
+                    <h4 class="exercise-title">🧘 Μικρή άσκηση για εσένα</h4>
+                    <p class="exercise-text">{msg}</p>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
+st.markdown("</div>", unsafe_allow_html=True)  
