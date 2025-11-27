@@ -1,0 +1,320 @@
+/* ============================================================
+   GLOBAL LAYOUT – pastel & soft
+   ============================================================ */
+
+html, body, .stApp {
+    background: radial-gradient(circle at top, #fdf2ff 0, #f5f7fb 40%, #f2fbff 100%);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #1f2933;
+}
+
+/* Κεντρική στήλη λίγο πιο στενή για ηρεμία στο μάτι */
+.block-container {
+    max-width: 880px;
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+}
+
+/* Λίγο πιο σφιχτό line-height */
+p, li {
+    line-height: 1.5;
+}
+
+/* ============================================================
+   SIDEBAR – soft dark με παστέλ πινελιές
+   ============================================================ */
+
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0f172a, #111827);
+}
+
+[data-testid="stSidebar"] * {
+    color: #e5e7eb !important;
+}
+
+.sidebar-subtitle {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin-bottom: 0.75rem;
+}
+
+/* Radio στο sidebar σαν “chips” */
+[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label {
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.9rem;
+}
+
+[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label:hover {
+    background: rgba(248, 250, 252, 0.12);
+}
+
+/* ============================================================
+   PAGE HEADER – στρογγυλεμένη κάρτα
+   ============================================================ */
+
+.page-header {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 22px;
+    padding: 18px 20px 16px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.10);
+    border: 1px solid rgba(209, 213, 219, 0.7);
+    backdrop-filter: blur(6px);
+}
+
+.page-header h1 {
+    margin: 0 0 4px 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.page-header p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+/* ============================================================
+   DISCLAIMER BOX – απαλό πορτοκαλί παστέλ
+   ============================================================ */
+
+.disclaimer-box {
+    background: #fff7ed;
+    border-radius: 18px;
+    padding: 12px 16px;
+    margin: 10px 0 18px 0;
+    border: 1px solid #fed7aa;
+    font-size: 0.9rem;
+    color: #7c2d12;
+}
+
+.disclaimer-box strong {
+    font-weight: 600;
+}
+
+/* ============================================================
+   MOOD BAR & CONTROLS – pastel gradient
+   ============================================================ */
+
+.mood-bar {
+    width: 100%;
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 8px 0 16px 0;
+}
+
+.mood-indicator {
+    height: 100%;
+    background: linear-gradient(90deg, #f9a8d4, #fcd34d, #86efac, #a5b4fc);
+    border-radius: 999px;
+    transition: width 0.35s ease-out;
+}
+
+/* Radio για διάθεση / ύπνο / νερό */
+div[role="radiogroup"] label {
+    font-size: 0.9rem;
+}
+
+/* Text area – πολύ στρογγυλεμένη */
+textarea {
+    border-radius: 18px !important;
+    border-color: #e5e7eb !important;
+}
+
+/* ============================================================
+   BUTTONS – pastel, στρογγυλεμένα, ήρεμα
+   ============================================================ */
+
+.stButton > button {
+    border-radius: 999px;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.92rem;
+    font-weight: 500;
+    border: 1px solid transparent;
+    background: linear-gradient(90deg, #fb7185, #f97316);
+    color: #ffffff;
+    box-shadow: 0 10px 18px rgba(248, 113, 113, 0.35);
+    transition: transform 0.05s ease-out, box-shadow 0.05s ease-out, filter 0.1s;
+}
+
+.stButton > button:hover {
+    filter: brightness(1.03);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(248, 113, 113, 0.45);
+}
+
+.stButton > button:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 12px rgba(248, 113, 113, 0.25);
+}
+
+/* Αν υπάρξουν δευτερεύοντα κουμπιά */
+.stButton > button[kind="secondary"] {
+    background: #e5e7eb;
+    color: #111827;
+    box-shadow: none;
+}
+
+/* ============================================================
+   MESSAGE AREA – απαλά cards (αν τα components τα χρησιμοποιούν)
+   ============================================================ */
+
+hr {
+    margin: 1.2rem 0 0.8rem 0;
+}
+
+/* Αν τυλίγεις τα μηνύματα σε wrapper (προαιρετικό) */
+.chat-message-wrapper {
+    margin-bottom: 0.7rem;
+}
+
+/* ============================================================
+   EMOTIONAL MAP – “cloud” tags
+   ============================================================ */
+
+.emotional-map-container {
+    background: rgba(248, 250, 252, 0.9);
+    border-radius: 18px;
+    border: 1px dashed #d1d5db;
+    padding: 10px 12px;
+    margin-top: 6px;
+    font-size: 0.9rem;
+}
+
+.emotional-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 0.8rem;
+    margin-right: 6px;
+    margin-bottom: 5px;
+}
+
+/* ============================================================
+   BREATHING / EXERCISES – pastel capsule
+   ============================================================ */
+
+.breathing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0 20px 0;
+    padding: 14px 18px;
+    border-radius: 22px;
+    background: radial-gradient(circle at top, #e0f2fe 0, #f5f3ff 45%, #fdf2ff 100%);
+    border: 1px solid #e0e7ff;
+}
+
+.breathing-container p {
+    font-size: 0.9rem;
+    color: #4b5563;
+    margin: 0;
+    text-align: center;
+}
+
+.breathing-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 999px;
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 0 5px rgba(129, 140, 248, 0.25);
+    animation: breathing 6s ease-in-out infinite;
+}
+
+@keyframes breathing {
+    0%   { transform: scale(0.9); opacity: 0.9; }
+    50%  { transform: scale(1.1); opacity: 1;   }
+    100% { transform: scale(0.9); opacity: 0.9; }
+}
+
+/* Τίτλοι ασκήσεων */
+h3, h4 {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* ============================================================
+   EXERCISE PROGRESS CARD – dominant pastel design
+   ============================================================ */
+
+.exercise-progress-card {
+    background: linear-gradient(
+        135deg,
+        #fbe9ff 0%,
+        #e3f2fd 40%,
+        #e7fff3 100%
+    );
+    padding: 24px 22px;
+    border-radius: 26px;
+    border: 1px solid rgba(200, 200, 255, 0.45);
+    box-shadow: 0 18px 28px rgba(140, 160, 200, 0.2);
+    margin-top: 20px;
+}
+
+.exercise-progress-card h3,
+.exercise-progress-card h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #3b3f55;
+    margin-bottom: 12px;
+}
+
+.exercise-progress-card p,
+.exercise-progress-card small {
+    color: #4f566b;
+}
+
+/* Chart holder μέσα στην κάρτα */
+.exercise-progress-card .chart-holder {
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: 18px;
+    padding: 14px 10px;
+    border: 1px solid rgba(210, 220, 255, 0.4);
+    margin-bottom: 10px;
+}
+
+/* Για να “στρογγυλέψει” όλο το chart */
+[data-testid="stBarChart"] canvas {
+    border-radius: 14px !important;
+}
+
+/* Table / λίστα κάτω από το chart */
+.exercise-table-holder {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 12px;
+    border-radius: 18px;
+    border: 1px solid rgba(220, 230, 255, 0.4);
+    font-size: 0.9rem;
+}
+
+/* ============================================================
+   TABLES / DATAFRAMES – soft card
+   ============================================================ */
+
+.dataframe {
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+/* ============================================================
+   SMALL TYPOGRAPHY TWEAKS
+   ============================================================ */
+
+h2, h3, h4 {
+    color: #111827;
+}
+
+small, .small-text {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
